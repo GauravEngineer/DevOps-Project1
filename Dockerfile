@@ -1,20 +1,15 @@
-# Use the official Python image
-FROM python  AS builder
+# Use the official Nginx image from Docker Hub
+FROM nginx:alpine
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /usr/share/nginx/html
 
-# Copy the current directory contents into the container at /app
+# Copy your index.html file into the default Nginx static content directory
 COPY . .
 
+# Expose port 80 to the outside world
+EXPOSE 80
 
-FROM python:3.11-alpine
+# Start Nginx when the container starts
+CMD ["nginx", "-g", "daemon off;"]
 
-WORKDIR /app 
-
-COPY --from=builder /app .
-# Expose port 8080 to the outside world
-EXPOSE 8080
-
-# Run the Python HTTP server to serve files from /app
-CMD ["python3", "-m", "http.server", "8080"]
